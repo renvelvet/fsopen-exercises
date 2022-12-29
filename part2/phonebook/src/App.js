@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import Phonebook from './components/Phonebook';
+
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -16,8 +19,8 @@ const App = () => {
   );
 
   const handleFilterChange = (event) => {
-    setFilter(event.target.value)
-  }
+    setFilter(event.target.value);
+  };
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -39,33 +42,24 @@ const App = () => {
     } else {
       setPersons(persons.concat(newName));
       setName('');
+      setNumber('');
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input onChange={handleFilterChange} />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={addPhonebook}>
-        <div>
-          name: <input onChange={handleNameChange} />
-        </div>
-        <div>
-          number <input onChange={handleNumberChange} />{' '}
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {phonebookToShow.map((person) => (
-          <Phonebook key={person.name} person={person} />
-        ))}
-      </ul>
+      <Filter handleChange={handleFilterChange} />
+      <h3>add a new</h3>
+      <PersonForm
+        name={name}
+        number={number}
+        addPhonebook={addPhonebook}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+      />
+      <h3>Numbers</h3>
+      <Persons persons={persons} phonebookToShow={phonebookToShow} />
     </div>
   );
 };
