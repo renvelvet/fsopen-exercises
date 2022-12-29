@@ -8,15 +8,21 @@ const App = () => {
     },
   ]);
   const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  const handleOnChange = (event) => {
+  const handleNameChange = (event) => {
     setName(event.target.value);
+  };
+
+  const handleNumberChange = (event) => {
+    setNumber(event.target.value);
   };
 
   const addPhonebook = (event) => {
     event.preventDefault();
     const newName = {
       name: name,
+      number: number,
     };
 
     if (persons.filter((person) => person.name === name).length !== 0) {
@@ -32,7 +38,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addPhonebook}>
         <div>
-          name: <input value={name} onChange={handleOnChange} />
+          name: <input onChange={handleNameChange} />
+        </div>
+        <div>
+          number <input onChange={handleNumberChange} />{' '}
         </div>
         <div>
           <button type="submit">add</button>
