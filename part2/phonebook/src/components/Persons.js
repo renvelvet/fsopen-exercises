@@ -1,6 +1,6 @@
 import Phonebook from './Phonebook';
 
-const Persons = ({ phonebookToShow, persons }) => {
+const Persons = ({ phonebookToShow }) => {
   return (
     <ul>
       {phonebookToShow.map((person) => (
