@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { getAll, add } from './services/persons';
+import { getAll, add, deletePerson } from './services/persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
-const App = (props) => {
+const App = () => {
   const [persons, setPersons] = useState([]);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -12,7 +12,6 @@ const App = (props) => {
 
   useEffect(() => {
     getAll().then((data) => {
-      console.log(data);
       setPersons(data);
     });
   }, []);
@@ -51,6 +50,17 @@ const App = (props) => {
     }
   };
 
+  const handleDelete = (event) => {
+    event.preventDefault();
+    const id = parseInt(event.target.value);
+    const target = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Delete ${target.name} ?`)) {
+      deletePerson(target.id);
+      setPersons(persons.filter((person) => person.id !== target.id));
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +74,11 @@ const App = (props) => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} phonebookToShow={phonebookToShow} />
+      <Persons
+        persons={persons}
+        phonebookToShow={phonebookToShow}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
