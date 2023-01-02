@@ -12,6 +12,7 @@ const App = () => {
   const [number, setNumber] = useState('');
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
+  const [type, setType] = useState('');
 
   useEffect(() => {
     getAll().then((data) => {
@@ -45,8 +46,10 @@ const App = () => {
     const target = persons.find(
       (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
     );
+
     const message =
       'is already added to phonebook, replace the old number with a new one?';
+
     if (
       persons.filter(
         (person) => person.name.toLowerCase() === name.toLowerCase()
@@ -61,12 +64,20 @@ const App = () => {
               )
             )
           )
-          .catch((error) => {});
+          .catch((error) => {
+            console.log('error', error);
+            setMessage(
+              `Information of ${newPerson.name} has already been removed from the server `
+            );
+            setType('error');
+            setTimeout(() => setMessage(null), 5000);
+          });
       }
     } else {
       add(newPerson).then((newData) => {
         setPersons(persons.concat(newData));
         setMessage(`Added ${newData.name}`);
+        setType('added');
         setTimeout(() => setMessage(null), 5000);
         setName('');
         setNumber('');
@@ -88,7 +99,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} type={type} />
       <Filter handleChange={handleFilterChange} />
       <h3>add a new</h3>
       <PersonForm
