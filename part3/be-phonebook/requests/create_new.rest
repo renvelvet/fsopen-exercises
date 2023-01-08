@@ -1,0 +1,5 @@
+POST https://icy-violet-6046.fly.dev/api/persons
+Content-Type: application/json
+
+{"name": "kiku",
+"number": "1212133"}
