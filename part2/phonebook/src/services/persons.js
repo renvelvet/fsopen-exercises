@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'https://icy-violet-6046.fly.dev/api/persons';
+const baseUrl = '/api/persons';
 
 export const getAll = () =>
   axios.get(baseUrl).then((response) => response.data);
