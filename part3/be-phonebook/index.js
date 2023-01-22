@@ -14,7 +14,7 @@ const requestLogger = (request, response, next) => {
 };
 
 app.use(express.json());
-app.use(requestLogger); 
+app.use(requestLogger);
 app.use(cors());
 app.use(express.static('build'));
 
@@ -55,6 +55,21 @@ app.get('/info', (request, response) => {
   const date = new Date().toString();
   response.send(`<p>Phonebook has info for ${persons.length} people</p>
   <p>${date}</p>`);
+});
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
+
+  const updatedPhonebook = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, updatedPhonebook, { new: true })
+    .then((updatedItem) => {
+      response.json(updatedItem);
+    })
+    .catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response, next) => {
