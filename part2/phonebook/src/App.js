@@ -66,22 +66,25 @@ const App = () => {
           )
           .catch((error) => {
             console.log('error', error);
-            setMessage(
-              `Information of ${newPerson.name} has already been removed from the server `
-            );
+            setMessage(error.response.data.error);
             setType('error');
             setTimeout(() => setMessage(null), 5000);
           });
       }
     } else {
-      add(newPerson).then((newData) => {
-        setPersons(persons.concat(newData));
-        setMessage(`Added ${newData.name}`);
-        setType('added');
-        setTimeout(() => setMessage(null), 5000);
-        setName('');
-        setNumber('');
-      });
+      add(newPerson)
+        .then((newData) => {
+          setPersons(persons.concat(newData));
+          setMessage(`Added ${newData.name}`);
+          setType('added');
+          setTimeout(() => setMessage(null), 5000);
+          setName('');
+          setNumber('');
+        })
+        .catch((error) => {
+          setMessage(error.response.data.error);
+          setType('error');
+        });
     }
   };
 
