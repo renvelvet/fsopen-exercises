@@ -53,8 +53,17 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.get('/info', (request, response) => {
   const date = new Date().toString();
-  response.send(`<p>Phonebook has info for ${persons.length} people</p>
-  <p>${date}</p>`);
+  const totalPerson = Person.find();
+
+  totalPerson.count((err, count) => {
+    if (err) {
+      console.log(err);
+    } else {
+      response.send(
+        `<p>Phonebook has info for ${count} people</p><p>${date}</p>`
+      );
+    }
+  });
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
