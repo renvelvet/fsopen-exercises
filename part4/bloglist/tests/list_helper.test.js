@@ -102,7 +102,19 @@ describe('most blogs', () => {
     author: 'Robert C. Martin',
     blogs: 3,
   };
+
   test('of author who has the largest amount of blogs', () => {
     expect(listHelper.mostBlogs(blogs)).toEqual(mostBlogs);
+  });
+});
+
+describe('most likes', () => {
+  const mostLikes = {
+    author: 'Edsger W. Dijkstra',
+    likes: 17,
+  };
+
+  test('of author who has the largest amount of likes', () => {
+    expect(listHelper.mostLikes(blogs)).toEqual(mostLikes);
   });
 });
