@@ -35,8 +35,11 @@ test('verifies that if the likes property is missing from the request, it will d
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(201);
-  console.log('res', res.body);
+
+  expect(res.body.likes).toBe(0);
 });
+
+test('verify that if the title or url properties are missing from the request data, status code 400 Bad Request', async () => {});
 
 afterAll(async () => {
   await mongoose.connection.close();
