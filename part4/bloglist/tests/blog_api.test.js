@@ -26,12 +26,7 @@ test('verifies that if the likes property is missing from the request, it will d
 
   const res = await api
     .post('/api/blogs')
-    .send({
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url,
-      likes: newBlog.likes || 0,
-    })
+    .send(newBlog)
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(201);
@@ -39,7 +34,25 @@ test('verifies that if the likes property is missing from the request, it will d
   expect(res.body.likes).toBe(0);
 });
 
-test('verify that if the title or url properties are missing from the request data, status code 400 Bad Request', async () => {});
+test('verify that if the title properties are missing from the request data, status code 400 Bad Request', async () => {
+  const newBlog = {
+    author: 'Nur Fauziyyaaa',
+    url: 'https://medium.com/generation-girl/discover-myths-to-improve-your-english-communication-91a72a07f9b6',
+    likes: 1,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('verify that if the url properties are missing from the request data, status code 400 Bad Request', async () => {
+  const newBlog = {
+    title: 'test',
+    author: 'Nur Fauziyyaaa',
+    likes: 1,
+  };
+
+  await api.post('/api/blogs').send(newBlog).expect(400);
+});
 
 afterAll(async () => {
   await mongoose.connection.close();
