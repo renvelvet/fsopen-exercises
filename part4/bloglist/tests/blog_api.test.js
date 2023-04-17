@@ -66,6 +66,14 @@ test('should succeeds with status code 204 if id is valid', async () => {
   expect(finalBlogs).toHaveLength(initBlogs.length - 1);
 });
 
+test('should succeeds with status code 200 after update a particular post information', async () => {
+  const blogs = await blogsInDb();
+  const updatedBlog = blogs[1];
+
+  const newUpdate = { likes: 77 };
+  await api.patch(`/api/blogs/${updatedBlog.id}`).send(newUpdate).expect(200);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

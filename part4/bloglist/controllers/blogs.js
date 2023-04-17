@@ -22,4 +22,20 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end();
 });
 
+blogsRouter.patch('/:id', async (request, response) => {
+  const updatedInformation = request.body;
+  await Blog.findByIdAndUpdate(request.params.id, updatedInformation, {
+    new: true,
+  })
+    .then((blog) => {
+      if (!blog) {
+        return response.status(400).send();
+      }
+      response.send(blog);
+    })
+    .catch((error) => {
+      response.status(500).send(error);
+    });
+});
+
 module.exports = blogsRouter;
