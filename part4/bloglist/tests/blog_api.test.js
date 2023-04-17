@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const { blogsInDb } = require('./test_helper');
 
 const api = supertest(app);
 
@@ -52,6 +53,17 @@ test('verify that if the url properties are missing from the request data, statu
   };
 
   await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('should succeeds with status code 204 if id is valid', async () => {
+  const initBlogs = await blogsInDb();
+  const blogId = initBlogs[0].id;
+
+  await api.delete(`/api/blogs/${blogId}`).expect(204);
+
+  const finalBlogs = await blogsInDb();
+
+  expect(finalBlogs).toHaveLength(initBlogs.length - 1);
 });
 
 afterAll(async () => {
