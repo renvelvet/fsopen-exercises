@@ -19,21 +19,19 @@ const getTokenFrom = (request) => {
 };
 
 blogsRouter.post('/', async (request, response, next) => {
-  const user = await User.find({});
   const { title, author, url, likes } = request.body;
-  const blog = new Blog({ title, url, author, likes, user: user[0].id });
 
-  /* 
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' });
   }
   const user = await User.findById(decodedToken.id);
- */
+  const blog = new Blog({ title, url, author, likes, user: user._id });
+
   try {
     const savedBlog = await blog.save();
-    user[0].blogs = user[0].blogs.concat(savedBlog._id);
-    await user[0].save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
 
     response.status(201).json(savedBlog);
   } catch (error) {
