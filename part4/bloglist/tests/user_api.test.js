@@ -89,7 +89,6 @@ describe('when there is initially one user in db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/);
 
-    console.log('result.body.error', result.body.error);
     expect(result.body.error).toContain(
       'Password must be at least 3 characters long'
     );

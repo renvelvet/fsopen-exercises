@@ -18,10 +18,8 @@ const tokenExtractor = (request, response, next) => {
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
     request.token = token;
-    next();
   }
-
-  return null;
+  next();
 };
 
 const errorHandler = (error, request, response, next) => {
