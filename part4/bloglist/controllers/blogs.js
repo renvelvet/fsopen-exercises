@@ -49,9 +49,14 @@ blogsRouter.delete('/:id', async (request, response) => {
 blogsRouter.put('/:id', async (request, response) => {
   const { title, url, author, likes } = request.body;
 
+  const user = request.user;
+  if (!user) {
+    return response.status(401).json({ error: 'operation not permitted' });
+  }
+
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
-    { title, url, author, likes },
+    { title, url, author, likes, user: user.id },
     { new: true }
   );
 
