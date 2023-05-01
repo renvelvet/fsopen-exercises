@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 const Blog = ({ blog, user, likeBlog, removeBlog }) => {
-  const [visibility, setVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
@@ -9,17 +9,17 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const handleLike = (event) => {
-    event.preventDefault();
-    likeBlog(blog);
-  };
+    event.preventDefault()
+    likeBlog(blog)
+  }
 
   const handleRemove = (event) => {
-    event.preventDefault();
-    removeBlog(blog);
-  };
+    event.preventDefault()
+    removeBlog(blog)
+  }
 
   return (
     <div style={blogStyle}>
@@ -43,7 +43,7 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
