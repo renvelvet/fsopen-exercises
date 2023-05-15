@@ -62,4 +62,5 @@ describe('<Blog />', () => {
       expect(mockLikeHandler.mock.calls).toHaveLength(2)
     })
   })
+
 })
