@@ -13,8 +13,12 @@ describe('<Blog />', () => {
     likes: 3,
   }
 
+  const mockLikeHandler = jest.fn()
+
   beforeEach(() => {
-    container = render(<Blog blog={blog} />).container
+    container = render(
+      <Blog blog={blog} handleLike={mockLikeHandler} />
+    ).container
   })
 
   test('renders blog title and author only in the first time', () => {
@@ -45,6 +49,17 @@ describe('<Blog />', () => {
         'https://bobbyhadz.com/blog/javascript-replace-element-in-array',
         { exact: false }
       )
+    })
+  })
+
+  test('should call the like event handler twice', async () => {
+    const user = userEvent.setup()
+    const button = screen.getAllByText('view')
+    await user.click(button[1])
+
+    container.querySelectorAll('div[likes]').forEach((eachDiv) => {
+      user.click(eachDiv)
+      expect(mockLikeHandler.mock.calls).toHaveLength(2)
     })
   })
 })
