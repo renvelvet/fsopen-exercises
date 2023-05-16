@@ -20,5 +20,12 @@ describe('<BlogForm/>', () => {
 
     const createButton = screen.getByText('create')
     await user.click(createButton)
+
+    expect(createForm.mock.calls).toHaveLength(1)
+    expect(createForm.mock.calls[0][0].title).toBe('Rekrutmen Bersama 2023')
+    expect(createForm.mock.calls[0][0].author).toBe('Resha')
+    expect(createForm.mock.calls[0][0].url).toBe(
+      'https://rekrutmenbersama.fhcibumn.id/'
+    )
   })
 })
