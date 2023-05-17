@@ -35,10 +35,12 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
           <div className="likes">
             likes {blog.likes} <button onClick={handleLike}>like</button>
           </div>
-          <div>{user.name}</div>
+          <div className="user">{user.name}</div>
           {/* remark blog created by user */}
           {blog.user.id === user.id && (
-            <button onClick={handleRemove}>remove</button>
+            <button className="removeBtn" onClick={handleRemove}>
+              remove
+            </button>
           )}
         </div>
       )}

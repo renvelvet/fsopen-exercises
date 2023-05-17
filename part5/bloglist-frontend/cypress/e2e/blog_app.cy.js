@@ -72,6 +72,12 @@ describe('Blog app', function () {
         cy.get('.likes').find('button').click()
         cy.get('.likes').contains('likes 1')
       })
+
+      it('users can remove owned blog', function () {
+        cy.get('.blog').first().find('button').click()
+
+        cy.get('.removeBtn').click()
+      })
     })
   })
 })
