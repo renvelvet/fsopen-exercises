@@ -22,7 +22,7 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className="blogContainer" style={blogStyle}>
       <div className="blog">
         {blog.title} by {blog.author}{' '}
         <button type="button" onClick={() => setVisibility(!visibility)}>
@@ -33,7 +33,10 @@ const Blog = ({ blog, user, likeBlog, removeBlog }) => {
         <div>
           <div className="url">{blog.url}</div>
           <div className="likes">
-            likes {blog.likes} <button onClick={handleLike}>like</button>
+            likes {blog.likes}{' '}
+            <button className="likeBtn" onClick={handleLike}>
+              like
+            </button>
           </div>
           <div className="user">{user.name}</div>
           {/* remark blog created by user */}

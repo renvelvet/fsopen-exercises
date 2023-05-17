@@ -79,9 +79,30 @@ describe('Blog app', function () {
         cy.get('.removeBtn').click()
       })
 
-      it.only('can see the delete button', function () {
+      it('can see the delete button', function () {
         cy.get('.blog').first().find('button').click()
         cy.contains('remove')
+      })
+
+      it.only('ordered according to likes', function () {
+        cy.createBlog({
+          title: 'The title with the second most likes',
+          author: 'me',
+          url: 'me.com',
+        })
+
+        cy.get('.blogContainer button').eq(0).click()
+        cy.get('.blogContainer .likes').eq(0).find('.likeBtn').click()
+        cy.get('.blogContainer .likes').eq(0).contains('likes 1')
+        cy.get('.blogContainer .likes').eq(0).find('.likeBtn').click()
+        cy.get('.blogContainer .likes').eq(0).contains('likes 2')
+        cy.get('.blogContainer .likes').eq(0).find('.likeBtn').click()
+        cy.get('.blogContainer .likes').eq(0).contains('likes 3')
+
+        cy.get('.blogContainer').eq(0).should('contain', 'Test Like by Raisha')
+        cy.get('.blogContainer')
+          .eq(1)
+          .should('contain', 'The title with the second most likes')
       })
     })
   })
