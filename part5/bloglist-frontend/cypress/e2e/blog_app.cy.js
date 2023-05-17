@@ -30,8 +30,27 @@ describe('Blog app', function () {
       cy.get('#password').type('password12')
       cy.get('#login-button').click()
 
-      cy.get('.error').should('contain', 'wrong username or password')
-      cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
+      cy.get('.error')
+        .should('contain', 'wrong username or password')
+        .and('have.css', 'color', 'rgb(255, 0, 0)')
+
+      cy.get('html').should('not.contain', 'Resha logged in')
+    })
+  })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'reshapuspita', password: 'password1234' })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('create new blog').click()
+      cy.get('[data-testid=title]').type('a new blog')
+      cy.get('[data-testid=author]').type('Resha')
+      cy.get('[data-testid=url]').type('http://localhost:3000/')
+      cy.get('#create-button').click()
+
+      cy.contains('a new blog by Resha')
     })
   })
 })
