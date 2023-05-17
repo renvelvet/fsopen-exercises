@@ -72,12 +72,11 @@ const App = () => {
 
   const likeBlog = (blogObject) => {
     const userInfo = {
-      username: blogObject.username,
-      name: blogObject.name,
-      id: blogObject.id,
+      username: blogObject.user.username,
+      name: blogObject.user.name,
+      id: blogObject.user.id,
     }
     const newChange = {
-      user: userInfo.id,
       title: blogObject.title,
       author: blogObject.author,
       url: blogObject.url,
