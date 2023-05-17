@@ -78,6 +78,11 @@ describe('Blog app', function () {
 
         cy.get('.removeBtn').click()
       })
+
+      it.only('can see the delete button', function () {
+        cy.get('.blog').first().find('button').click()
+        cy.contains('remove')
+      })
     })
   })
 })
