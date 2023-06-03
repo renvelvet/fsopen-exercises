@@ -5,31 +5,41 @@ const anecdotesAtStart = [
   'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
   'Premature optimization is the root of all evil.',
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-];
+]
 
-const getId = () => (100000 * Math.random()).toFixed(0);
+const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
   return {
     content: anecdote,
     id: getId(),
     votes: 0,
-  };
-};
+  }
+}
 
-const initialState = anecdotesAtStart.map(asObject);
+const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
   if (action.type === 'VOTE') {
-    const currentState = state.filter((item) => item.id !== action.data.id);
-        return currentState.concat({
-        content: action.data.content,
-        id: action.data.id,
-        votes: action.data.votes,
-      })
-    };
+    const currentState = state.filter((item) => item.id !== action.data.id)
+    return currentState.concat({
+      content: action.data.content,
+      id: action.data.id,
+      votes: action.data.votes + 1,
+    })
+  } else if (action.type === 'NEW') {
+    return [...state, asObject(action.data)]
+  }
 
-  return state;
-};
+  return state
+}
 
-export default reducer;
+export const vote = (anecdote) => {
+  return { type: 'VOTE', data: anecdote }
+}
+
+export const newAnecdote = (anecdote) => {
+  return { type: 'NEW', data: anecdote }
+}
+
+export default reducer
