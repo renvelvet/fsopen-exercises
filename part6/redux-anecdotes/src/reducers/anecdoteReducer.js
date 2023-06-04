@@ -19,7 +19,7 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
+const anecdoteReducer = (state = initialState, action) => {
   if (action.type === 'VOTE') {
     const currentState = state.filter((item) => item.id !== action.data.id)
     return currentState.concat({
@@ -42,4 +42,4 @@ export const newAnecdote = (anecdote) => {
   return { type: 'NEW', data: anecdote }
 }
 
-export default reducer
+export default anecdoteReducer
