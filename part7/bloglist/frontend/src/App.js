@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -8,11 +9,13 @@ import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { reset, setNotification } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState('')
-  const [info, setInfo] = useState({ message: null })
+  const info = useSelector((state) => state.notification)
+  const dispatch = useDispatch()
 
   const blogFormRef = useRef()
 
@@ -26,13 +29,10 @@ const App = () => {
   }, [])
 
   const notifyWith = (message, type = 'info') => {
-    setInfo({
-      message,
-      type,
-    })
+    dispatch(setNotification({ message, notifType: type }))
 
     setTimeout(() => {
-      setInfo({ message: null })
+      dispatch(reset())
     }, 3000)
   }
 
