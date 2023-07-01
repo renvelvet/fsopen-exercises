@@ -51,6 +51,7 @@ router.put('/:id', async (request, response) => {
 })
 
 router.delete('/:id', userExtractor, async (request, response) => {
+  console.log('request.params.id', request.params.id)
   const blog = await Blog.findById(request.params.id)
 
   const user = request.user
@@ -62,7 +63,7 @@ router.delete('/:id', userExtractor, async (request, response) => {
   user.blogs = user.blogs.filter((b) => b.toString() !== blog.id.toString())
 
   await user.save()
-  await blog.remove()
+  await Blog.findByIdAndRemove(request.params.id)
 
   response.status(204).end()
 })
