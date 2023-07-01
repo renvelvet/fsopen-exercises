@@ -51,7 +51,6 @@ router.put('/:id', async (request, response) => {
 })
 
 router.delete('/:id', userExtractor, async (request, response) => {
-  console.log('request.params.id', request.params.id)
   const blog = await Blog.findById(request.params.id)
 
   const user = request.user
