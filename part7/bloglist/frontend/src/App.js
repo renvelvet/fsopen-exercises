@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import loginService from './services/login'
 import storageService from './services/storage'
@@ -8,11 +8,16 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useNotify } from './NotificationContext'
+
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { getBlogs, createNew, updateLikes, removeBlog } from './requests'
+import { useLogin, useLogout, useUserContextValue } from './UserContext'
 
 const App = () => {
-  const [user, setUser] = useState('')
+  const user = useUserContextValue()
+  const loginUser = useLogin()
+  const logoutUser = useLogout()
+
   const queryClient = useQueryClient()
   const newBlogMutation = useMutation(createNew, {
     onSuccess: () => {
@@ -33,8 +38,7 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    const user = storageService.loadUser()
-    setUser(user)
+    loginUser(storageService.loadUser())
   }, [])
 
   const result = useQuery('blogs', getBlogs)
@@ -44,7 +48,7 @@ const App = () => {
   const login = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
-      setUser(user)
+      loginUser(user)
       storageService.saveUser(user)
       notifyWith({ message: 'welcome!' })
     } catch (e) {
@@ -53,7 +57,7 @@ const App = () => {
   }
 
   const logout = async () => {
-    setUser(null)
+    logoutUser()
     storageService.removeUser()
     notifyWith({ message: 'logged out' })
   }
@@ -100,8 +104,6 @@ const App = () => {
 
   if (result.isLoading) {
     return <div>loading data...</div>
-  } else {
-    console.log('result.data', result)
   }
 
   const blogs = result.data
