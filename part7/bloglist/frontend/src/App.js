@@ -1,14 +1,15 @@
 import { useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+
 import loginService from './services/login'
 import storageService from './services/storage'
 
+import Blog from './components/Blog'
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { useNotify } from './NotificationContext'
 
+import { useNotify } from './NotificationContext'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { getBlogs, createNew, updateLikes, removeBlog } from './requests'
 import { useLogin, useLogout, useUserContextValue } from './UserContext'
@@ -116,7 +117,7 @@ const App = () => {
         {user.name} logged in
         <button onClick={logout}>logout</button>
       </div>
-      <Togglable buttonLabel="new note" ref={blogFormRef}>
+      <Togglable buttonLabel="new post" ref={blogFormRef}>
         <NewBlog createBlog={createBlog} />
       </Togglable>
       <div>
@@ -131,7 +132,8 @@ const App = () => {
                 canRemove={user && blog.user.username === user.username}
                 remove={() => remove(blog)}
               />
-            ))}
+            ))
+         }
       </div>
     </div>
   )
