@@ -1,22 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { Provider } from 'react-redux'
-import { configureStore } from '@reduxjs/toolkit'
-import notificationReducer from './reducers/notificationReducer'
-import blogReducer from './reducers/blogReducer'
-import userReducer from './reducers/userReducer'
+import { NotificationContextProvider } from './NotificationContext'
+import { UserContextProvider } from './UserContext'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
-const store = configureStore({
-  reducer: {
-    notification: notificationReducer,
-    blog: blogReducer,
-    user: userReducer,
-  },
-})
+const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <QueryClientProvider client={queryClient}>
+    <UserContextProvider>
+      <NotificationContextProvider>
+        <App />
+      </NotificationContextProvider>
+    </UserContextProvider>
+  </QueryClientProvider>
 )

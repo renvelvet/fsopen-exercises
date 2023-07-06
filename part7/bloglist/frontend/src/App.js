@@ -1,74 +1,82 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Blog from './components/Blog'
 
 import loginService from './services/login'
 import storageService from './services/storage'
 
+import Blog from './components/Blog'
 import LoginForm from './components/Login'
 import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { reset, setNotification } from './reducers/notificationReducer'
-import {
-  createNew,
-  initializeBlogs,
-  likeBlog,
-  removeBlog,
-} from './reducers/blogReducer'
-import { removeUser, setUser } from './reducers/userReducer'
+
+import { useNotify } from './NotificationContext'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { getBlogs, createNew, updateLikes, removeBlog } from './requests'
+import { useLogin, useLogout, useUserContextValue } from './UserContext'
 
 const App = () => {
-  /* const [user, setUser] = useState('') */
-  const user = useSelector((state) => state.user)
-  const info = useSelector((state) => state.notification)
-  const blogs = useSelector((state) => state.blog)
-  const dispatch = useDispatch()
+  const user = useUserContextValue()
+  const loginUser = useLogin()
+  const logoutUser = useLogout()
+
+  const queryClient = useQueryClient()
+  const newBlogMutation = useMutation(createNew, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+  const updateLikesMutation = useMutation(updateLikes, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+  const deleteBlogMutation = useMutation(removeBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
 
   const blogFormRef = useRef()
 
   useEffect(() => {
-    dispatch(setUser(storageService.loadUser()))
-  }, [dispatch])
+    loginUser(storageService.loadUser())
+  }, [])
 
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
+  const result = useQuery('blogs', getBlogs)
 
-  const notifyWith = (message, type = 'info') => {
-    dispatch(setNotification({ message, notifType: type }))
-
-    setTimeout(() => {
-      dispatch(reset())
-    }, 3000)
-  }
+  const notifyWith = useNotify()
 
   const login = async (username, password) => {
     try {
       const user = await loginService.login({ username, password })
+      loginUser(user)
       storageService.saveUser(user)
-      dispatch(setUser(user))
-      notifyWith('welcome!')
+      notifyWith({ message: 'welcome!' })
     } catch (e) {
-      notifyWith('wrong username or password', 'error')
+      notifyWith({ message: 'wrong username or password', type: 'error' })
     }
   }
 
   const logout = async () => {
-    dispatch(removeUser())
+    logoutUser()
     storageService.removeUser()
-    notifyWith('logged out')
+    notifyWith({ message: 'logged out' })
   }
 
   const createBlog = async (newBlog) => {
-    dispatch(createNew(newBlog))
-    notifyWith(`A new blog '${newBlog.title}' by '${newBlog.author}' added`)
+    newBlogMutation.mutate(newBlog)
+    notifyWith({
+      message: `A new blog '${newBlog.title}' by '${newBlog.author}' added`,
+    })
     blogFormRef.current.toggleVisibility()
   }
 
   const like = async (blog) => {
-    dispatch(likeBlog(blog))
-    notifyWith(`A like for the blog '${blog.title}' by '${blog.author}'`)
+    const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+    updateLikesMutation.mutate(blogToUpdate)
+    notifyWith({
+      message: `A like for the blog '${blog.title}' by '${blog.author}'`,
+    })
   }
 
   const remove = async (blog) => {
@@ -76,8 +84,10 @@ const App = () => {
       `Sure you want to remove '${blog.title}' by ${blog.author}`
     )
     if (ok) {
-      dispatch(removeBlog(blog))
-      notifyWith(`The blog' ${blog.title}' by '${blog.author} removed`)
+      deleteBlogMutation.mutate(blog.id)
+      notifyWith({
+        message: `The blog '${blog.title}' by '${blog.author}' removed`,
+      })
     }
   }
 
@@ -85,16 +95,24 @@ const App = () => {
     return (
       <div>
         <h2>log in to application</h2>
-        <Notification info={info} />
+        <Notification />
         <LoginForm login={login} />
       </div>
     )
   }
 
+  const byLikes = (b1, b2) => b2.likes - b1.likes
+
+  if (result.isLoading) {
+    return <div>loading data...</div>
+  }
+
+  const blogs = result.data
+
   return (
     <div>
       <h2>blogs</h2>
-      <Notification info={info} />
+      <Notification />
       <div>
         {user.name} logged in
         <button onClick={logout}>logout</button>
@@ -103,15 +121,19 @@ const App = () => {
         <NewBlog createBlog={createBlog} />
       </Togglable>
       <div>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            like={() => like(blog)}
-            canRemove={user && blog.user.username === user.username}
-            remove={() => remove(blog)}
-          />
-        ))}
+        {!result.isLoading &&
+          blogs
+            .sort(byLikes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                like={() => like(blog)}
+                canRemove={user && blog.user.username === user.username}
+                remove={() => remove(blog)}
+              />
+            ))
+         }
       </div>
     </div>
   )
