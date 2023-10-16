@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_ENV=development nodemon index.js"
   },
   "author": "reshap",
   "license": "ISC",
@@ -12,5 +13,8 @@
     "@apollo/server": "^4.9.4",
     "graphql": "^16.8.1",
     "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
