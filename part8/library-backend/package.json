@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development nodemon index.js"
+    "dev": "SET NODE_ENV=development & nodemon index.js"
   },
   "author": "reshap",
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.9.4",
+    "dotenv": "^16.3.2",
     "graphql": "^16.8.1",
+    "mongodb": "^6.3.0",
+    "mongoose": "^7.6.8",
+    "mongoose-unique-validator": "^4.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
